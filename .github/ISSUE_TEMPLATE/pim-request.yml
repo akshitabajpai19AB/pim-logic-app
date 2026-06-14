@@ -1,0 +1,53 @@
+name: PIM Access Request
+
+title: "[PIM Request] "
+
+body:
+  - type: input
+    id: user_email
+    attributes:
+      label: User Email
+
+  - type: input
+    id: azure_role
+    attributes:
+      label: Azure Role
+
+  - type: input
+    id: group_name
+    attributes:
+      label: Group Name
+
+  - type: input
+    id: scope
+    attributes:
+      label: Scope (Subscription / RG)
+
+  - type: input
+    id: duration
+    attributes:
+      label: Duration (hours)
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Future Activation (Optional)
+        Can approve requests for future dates. Limited to **2 requests** of **4 hours each**.
+
+  - type: checkbox
+    id: is_future_activation
+    attributes:
+      label: Is this a future activation request?
+      description: Check if this activation is for a future date
+
+  - type: input
+    id: future_activation_date
+    attributes:
+      label: Future Activation Date (if applicable)
+      description: "Format: YYYY-MM-DD (leave blank if not a future activation request)"
+      placeholder: "2026-07-15"
+
+  - type: textarea
+    id: justification
+    attributes:
+      label: Justification

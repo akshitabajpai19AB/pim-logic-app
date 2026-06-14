@@ -1,0 +1,27 @@
+name: Send PIM Request to Logic App
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  send-request:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Extract issue body
+        id: extract
+        run: |
+          echo "BODY<<EOF" >> $GITHUB_ENV
+          echo "${{ github.event.issue.body }}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Call Logic App
+        run: |
+          curl -X POST "${{ secrets.LOGIC_APP_URL }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "issue_number": "${{ github.event.issue.number }}",
+            "repo": "${{ github.repository }}",
+            "user_email": "${{ github.event.issue.body }}"
+          }'
