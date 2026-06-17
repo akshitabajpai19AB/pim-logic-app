@@ -1,5 +1,5 @@
 name: PIM Access Request
-
+description: Request temporary PIM access through approval workflow
 title: "[PIM Request] "
 
 body:
