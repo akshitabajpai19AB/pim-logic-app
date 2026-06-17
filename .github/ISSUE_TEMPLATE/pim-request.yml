@@ -34,11 +34,13 @@ body:
         ## Future Activation (Optional)
         Can approve requests for future dates. Limited to **2 requests** of **4 hours each**.
 
-  - type: checkbox
+  - type: checkboxes
     id: is_future_activation
     attributes:
       label: Is this a future activation request?
-      description: Check if this activation is for a future date
+      options:
+        - label: Yes, this is a future activation request
+          required: false
 
   - type: input
     id: future_activation_date
