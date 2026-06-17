@@ -21,7 +21,7 @@ jobs:
           curl -X POST "${{ secrets.LOGIC_APP_URL }}" \
           -H "Content-Type: application/json" \
           -d '{
-            "issue_number": "${{ github.event.issue.number }}",
+            "issueNumber": "${{ github.event.issue.number }}",
             "repo": "${{ github.repository }}",
             "user_email": "${{ github.event.issue.body }}"
           }'
