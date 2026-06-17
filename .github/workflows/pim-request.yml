@@ -9,19 +9,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Extract issue body
+
+      - name: Extract Fields
         id: extract
         run: |
-          echo "BODY<<EOF" >> $GITHUB_ENV
-          echo "${{ github.event.issue.body }}" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          BODY="${{ github.event.issue.body }}"
+
+          USER_EMAIL=$(echo "$BODY" | awk '/User Email/{getline; print}')
+          AZURE_ROLE=$(echo "$BODY" | awk '/Azure Role/{getline; print}')
+          GROUP_NAME=$(echo "$BODY" | awk '/Group Name/{getline; print}')
+          SCOPE=$(echo "$BODY" | awk '/Scope/{getline; print}')
+          DURATION=$(echo "$BODY" | awk '/Duration/{getline; print}')
+          JUSTIFICATION=$(echo "$BODY" | awk '/Justification/{getline; print}')
+
+          echo "USER_EMAIL=$USER_EMAIL" >> $GITHUB_ENV
+          echo "AZURE_ROLE=$AZURE_ROLE" >> $GITHUB_ENV
+          echo "GROUP_NAME=$GROUP_NAME" >> $GITHUB_ENV
+          echo "SCOPE=$SCOPE" >> $GITHUB_ENV
+          echo "DURATION=$DURATION" >> $GITHUB_ENV
+          echo "JUSTIFICATION=$JUSTIFICATION" >> $GITHUB_ENV
 
       - name: Call Logic App
         run: |
           curl -X POST "${{ secrets.LOGIC_APP_URL }}" \
           -H "Content-Type: application/json" \
           -d '{
-            "issueNumber": "${{ github.event.issue.number }}",
-            "repo": "${{ github.repository }}",
-            "user_email": "${{ github.event.issue.body }}"
+            "issueNumber":"${{ github.event.issue.number }}",
+            "repository":"${{ github.repository }}",
+            "userEmail":"${{ env.USER_EMAIL }}",
+            "azureRole":"${{ env.AZURE_ROLE }}",
+            "groupName":"${{ env.GROUP_NAME }}",
+            "scope":"${{ env.SCOPE }}",
+            "duration":"${{ env.DURATION }}",
+            "justification":"${{ env.JUSTIFICATION }}"
           }'
