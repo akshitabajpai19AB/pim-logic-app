@@ -2,25 +2,26 @@ name: Send PIM Request to Logic App
 
 on:
   issues:
-    types: [opened]
+    types:
+      - opened
+      - edited
+      - reopened
 
 jobs:
   send-request:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Extract Fields
-        id: extract
         run: |
           BODY="${{ github.event.issue.body }}"
 
-          USER_EMAIL=$(echo "$BODY" | awk '/User Email/{getline; print}')
-          AZURE_ROLE=$(echo "$BODY" | awk '/Azure Role/{getline; print}')
-          GROUP_NAME=$(echo "$BODY" | awk '/Group Name/{getline; print}')
-          SCOPE=$(echo "$BODY" | awk '/Scope/{getline; print}')
-          DURATION=$(echo "$BODY" | awk '/Duration/{getline; print}')
-          JUSTIFICATION=$(echo "$BODY" | awk '/Justification/{getline; print}')
+          USER_EMAIL=$(echo "$BODY" | awk '/### User Email/{getline; getline; print}')
+          AZURE_ROLE=$(echo "$BODY" | awk '/### Azure Role/{getline; getline; print}')
+          GROUP_NAME=$(echo "$BODY" | awk '/### Group Name/{getline; getline; print}')
+          SCOPE=$(echo "$BODY" | awk '/### Scope/{getline; getline; print}')
+          DURATION=$(echo "$BODY" | awk '/### Duration/{getline; getline; print}')
+          JUSTIFICATION=$(echo "$BODY" | awk '/### Justification/{getline; getline; print}')
 
           echo "USER_EMAIL=$USER_EMAIL" >> $GITHUB_ENV
           echo "AZURE_ROLE=$AZURE_ROLE" >> $GITHUB_ENV
@@ -28,6 +29,19 @@ jobs:
           echo "SCOPE=$SCOPE" >> $GITHUB_ENV
           echo "DURATION=$DURATION" >> $GITHUB_ENV
           echo "JUSTIFICATION=$JUSTIFICATION" >> $GITHUB_ENV
+
+          echo "Extracted User: $USER_EMAIL"
+          echo "Extracted Role: $AZURE_ROLE"
+          echo "Extracted Group: $GROUP_NAME"
+
+      - name: Verify Values
+        run: |
+          echo "User=$USER_EMAIL"
+          echo "Role=$AZURE_ROLE"
+          echo "Group=$GROUP_NAME"
+          echo "Scope=$SCOPE"
+          echo "Duration=$DURATION"
+          echo "Justification=$JUSTIFICATION"
 
       - name: Call Logic App
         run: |
