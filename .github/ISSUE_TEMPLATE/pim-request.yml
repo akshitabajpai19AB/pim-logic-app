@@ -7,26 +7,31 @@ body:
     id: user_email
     attributes:
       label: User Email
+      description: Email address of the user requesting PIM access
 
   - type: input
     id: azure_role
     attributes:
       label: Azure Role
+      description: Specify the Azure role to be activated
 
   - type: input
     id: group_name
     attributes:
       label: Group Name
+      description: Name of the group for which access is being requested
 
   - type: input
     id: scope
     attributes:
       label: Scope (Subscription / RG)
+      description: Specify the subscription or resource group for this request
 
   - type: input
     id: duration
     attributes:
       label: Duration (hours)
+      description: Number of hours for which the access should be activated
 
   - type: markdown
     attributes:
@@ -53,3 +58,4 @@ body:
     id: justification
     attributes:
       label: Justification
+      description: Provide the business justification for this access request
