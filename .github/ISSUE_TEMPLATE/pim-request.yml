@@ -9,11 +9,22 @@ body:
       label: User Email
       description: Email address of the user requesting PIM access
 
-  - type: input
+  - type: dropdown
     id: azure_role
     attributes:
       label: Azure Role
-      description: Specify the Azure role to be activated
+      description: Select Azure role
+      options:
+        - Reader
+        - Contributor
+        - Owner
+        - User Access Administrator
+        - Network Contributor
+        - Virtual Machine Contributor
+        - Storage Blob Data Contributor
+        - Key Vault Administrator
+    validations:
+      required: true
 
   - type: input
     id: group_name
