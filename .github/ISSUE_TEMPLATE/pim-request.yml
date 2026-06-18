@@ -1,72 +1,67 @@
 name: PIM Access Request
-description: Request temporary PIM access through approval workflow
+description: Request temporary PIM group activation through approval workflow
 title: "[PIM Request] "
 
 body:
+
   - type: input
     id: user_email
     attributes:
       label: User Email
       description: Email address of the user requesting PIM access
-
-  - type: dropdown
-    id: azure_role
-    attributes:
-      label: Azure Role
-      description: Select Azure role
-      options:
-        - Reader
-        - Contributor
-        - Owner
-        - User Access Administrator
-        - Network Contributor
-        - Virtual Machine Contributor
-        - Storage Blob Data Contributor
-        - Key Vault Administrator
     validations:
       required: true
 
   - type: input
     id: group_name
     attributes:
-      label: Group Name
-      description: Name of the group for which access is being requested
-
-  - type: input
-    id: scope
-    attributes:
-      label: Scope (Subscription / RG)
-      description: Specify the subscription or resource group for this request
+      label: PIM Group Name
+      description: Name of the PIM-enabled group to activate
+      placeholder: PIM-Contributor-Group
+    validations:
+      required: true
 
   - type: input
     id: duration
     attributes:
       label: Duration (hours)
-      description: Number of hours for which the access should be activated
+      description: Number of hours for which access should be activated
+      placeholder: "4"
+    validations:
+      required: true
 
   - type: markdown
     attributes:
       value: |
         ## Future Activation (Optional)
-        Can approve requests for future dates. Limited to **2 requests** of **4 hours each**.
+
+        Future activation can be scheduled for a specific date and time.
 
   - type: checkboxes
     id: is_future_activation
     attributes:
       label: Is this a future activation request?
       options:
-        - label: Yes, this is a future activation request
-          required: false
+        - label: Yes, schedule activation for a future date and time
 
   - type: input
     id: future_activation_date
     attributes:
-      label: Future Activation Date (if applicable)
-      description: "Format: YYYY-MM-DD (leave blank if not a future activation request)"
+      label: Future Activation Date
+      description: Format YYYY-MM-DD
       placeholder: "2026-07-15"
+
+  - type: input
+    id: future_activation_time
+    attributes:
+      label: Future Activation Time (24-hour format)
+      description: Format HH:mm
+      placeholder: "18:30"
 
   - type: textarea
     id: justification
     attributes:
       label: Justification
       description: Provide the business justification for this access request
+    validations:
+      required: true
