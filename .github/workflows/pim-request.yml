@@ -16,9 +16,9 @@ jobs:
         run: |
           BODY="${{ github.event.issue.body }}"
 
-          USER_NAME=$(echo "$ISSUE_BODY" | grep -A1 "### User Name" | tail -n1 | xargs)
+          USER_NAME=$(echo "$BODY" | awk '/### User Name/{getline; getline; print}')
           USER_EMAIL=$(echo "$BODY" | awk '/### User Email/{getline; getline; print}')
-          GROUP_NAME=$(echo "$BODY" | awk '/### Group Name/{getline; getline; print}')
+          GROUP_NAME=$(echo "$BODY" | awk '/### PIM Group Name/{getline; getline; print}')
           DURATION=$(echo "$BODY" | awk '/### Duration/{getline; getline; print}')
           JUSTIFICATION=$(echo "$BODY" | awk '/### Justification/{getline; getline; print}')
 
@@ -46,11 +46,9 @@ jobs:
           -d '{
             "issueNumber":"${{ github.event.issue.number }}",
             "repository":"${{ github.repository }}",
-            "userName":"${{ env.USER_NAME }}"
+            "userName":"${{ env.USER_NAME }}",
             "userEmail":"${{ env.USER_EMAIL }}",
-            "azureRole":"${{ env.AZURE_ROLE }}",
             "groupName":"${{ env.GROUP_NAME }}",
-            "scope":"${{ env.SCOPE }}",
             "duration":"${{ env.DURATION }}",
             "justification":"${{ env.JUSTIFICATION }}"
           }'
