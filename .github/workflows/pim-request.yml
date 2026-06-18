@@ -16,30 +16,26 @@ jobs:
         run: |
           BODY="${{ github.event.issue.body }}"
 
+          USER_NAME=$(echo "$ISSUE_BODY" | grep -A1 "### User Name" | tail -n1 | xargs)
           USER_EMAIL=$(echo "$BODY" | awk '/### User Email/{getline; getline; print}')
-          AZURE_ROLE=$(echo "$BODY" | awk '/### Azure Role/{getline; getline; print}')
           GROUP_NAME=$(echo "$BODY" | awk '/### Group Name/{getline; getline; print}')
-          SCOPE=$(echo "$BODY" | awk '/### Scope/{getline; getline; print}')
           DURATION=$(echo "$BODY" | awk '/### Duration/{getline; getline; print}')
           JUSTIFICATION=$(echo "$BODY" | awk '/### Justification/{getline; getline; print}')
 
+          echo "USER_NAME=$USER_NAME" >> $GITHUB_ENV
           echo "USER_EMAIL=$USER_EMAIL" >> $GITHUB_ENV
-          echo "AZURE_ROLE=$AZURE_ROLE" >> $GITHUB_ENV
           echo "GROUP_NAME=$GROUP_NAME" >> $GITHUB_ENV
-          echo "SCOPE=$SCOPE" >> $GITHUB_ENV
           echo "DURATION=$DURATION" >> $GITHUB_ENV
           echo "JUSTIFICATION=$JUSTIFICATION" >> $GITHUB_ENV
 
           echo "Extracted User: $USER_EMAIL"
-          echo "Extracted Role: $AZURE_ROLE"
+          echo "Extracted User: $USER_NAME"
           echo "Extracted Group: $GROUP_NAME"
 
       - name: Verify Values
         run: |
           echo "User=$USER_EMAIL"
-          echo "Role=$AZURE_ROLE"
           echo "Group=$GROUP_NAME"
-          echo "Scope=$SCOPE"
           echo "Duration=$DURATION"
           echo "Justification=$JUSTIFICATION"
 
@@ -50,6 +46,7 @@ jobs:
           -d '{
             "issueNumber":"${{ github.event.issue.number }}",
             "repository":"${{ github.repository }}",
+            "userName":"${{ env.USER_NAME }}"
             "userEmail":"${{ env.USER_EMAIL }}",
             "azureRole":"${{ env.AZURE_ROLE }}",
             "groupName":"${{ env.GROUP_NAME }}",
